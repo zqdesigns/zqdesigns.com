@@ -1,0 +1,302 @@
+/* ZQDesigns.com — Joshua Bishop
+   One family (Atkinson Hyperlegible Next, self-hosted), one column,
+   one schematic detail: the career timeline is a wire that starts at a
+   terminal and ends at ground. */
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("/assets/fonts/atkinson-hyperlegible-next-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("/assets/fonts/atkinson-hyperlegible-next-latin-wght-italic.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --paper: #f4f7f5;
+  --ink: #17211c;
+  --mask: #1e5a42;      /* soldermask green: wire, links, roles */
+  --muted: #56665e;
+  --rule: #d3dcd6;
+  --select: #f1e3b5;    /* pale ENIG gold, selection only */
+
+  --measure: 42rem;
+  --wire-x: 0.55rem;    /* where the bus runs, inside the timeline gutter */
+  --gutter: 2.4rem;     /* timeline text indent */
+  --stroke: 2px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  font-family: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+  font-size: 112.5%; /* 18px */
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: clamp(2.5rem, 7vw, 5.5rem) 1.25rem 3rem;
+}
+
+::selection { background: var(--select); color: var(--ink); }
+
+.page {
+  max-width: var(--measure);
+  margin: 0 auto;
+}
+
+a {
+  color: var(--mask);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible {
+  outline: 2px solid var(--mask);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+}
+.skip:focus {
+  left: 1rem;
+  top: 1rem;
+  background: var(--paper);
+  padding: 0.4rem 0.7rem;
+  z-index: 10;
+}
+
+p, ul, ol { margin: 0 0 1rem; }
+ul, ol { padding-left: 1.2rem; }
+li { margin-bottom: 0.45rem; }
+li::marker { color: var(--muted); }
+
+/* ---------- Home: header ---------- */
+
+.site-name {
+  font-weight: 700;
+  margin: 0 0 2.6rem;
+}
+
+.masthead h1 {
+  font-size: clamp(2.3rem, 6.6vw, 3.7rem);
+  line-height: 1.06;
+  font-weight: 760;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  margin: 0 0 1.5rem;
+}
+
+.lede {
+  font-size: 1.28rem;
+  line-height: 1.5;
+  margin-bottom: 1.1rem;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  list-style: none;
+  padding: 0;
+  margin: 1.6rem 0 0;
+  font-weight: 600;
+}
+.contact li { margin: 0; }
+
+/* ---------- Home: the story as a schematic net ---------- */
+
+.net {
+  position: relative;
+  margin-top: clamp(3rem, 8vw, 4.5rem);
+  padding-top: 2.2rem;
+  padding-left: var(--gutter);
+}
+
+/* the bus: from the input terminal down to the ground symbol */
+.net::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--wire-x) - var(--stroke) / 2);
+  top: 0.75rem;
+  bottom: 1rem;
+  width: var(--stroke);
+  background: var(--mask);
+}
+
+/* input terminal: open circle at the top of the wire */
+.net::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--wire-x) - 0.4rem);
+  top: 0;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: var(--stroke) solid var(--mask);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.node {
+  --branch-y: 0.98rem; /* vertical centre of the section heading's first line */
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.node h2 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 700;
+  margin: 0 0 0.8rem;
+}
+
+/* branch from the bus to the entry */
+.node::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--wire-x) - var(--gutter));
+  top: calc(var(--branch-y) - var(--stroke) / 2);
+  width: calc(var(--gutter) - var(--wire-x) - 0.55rem);
+  height: var(--stroke);
+  background: var(--mask);
+}
+
+/* junction dot where the branch meets the bus */
+.node::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--wire-x) - var(--gutter) - 0.32rem);
+  top: calc(var(--branch-y) - 0.32rem);
+  width: 0.64rem;
+  height: 0.64rem;
+  border-radius: 50%;
+  background: var(--mask);
+}
+
+.node > p:last-child { margin-bottom: 0; }
+.nowrap { white-space: nowrap; }
+
+/* ground symbol terminating the bus */
+.ground {
+  display: block;
+  position: relative;
+  left: calc(var(--wire-x) - var(--gutter) - 0.75rem);
+  width: 1.5rem;
+  height: 1.05rem;
+  margin-top: 0.6rem;
+  color: var(--mask);
+}
+
+/* ---------- Footer (all pages) ---------- */
+
+.site-foot {
+  margin-top: 4.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 1.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.site-foot ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.3rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.site-foot li { margin: 0; }
+.site-foot a { color: var(--muted); }
+.site-foot a:hover { color: var(--mask); }
+
+/* ---------- Inner pages (app, privacy, terms) ---------- */
+
+.home-link {
+  display: inline-block;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink);
+  margin-bottom: 2.6rem;
+}
+.home-link:hover { color: var(--mask); }
+
+.doc h1 {
+  font-size: clamp(2rem, 5.5vw, 2.7rem);
+  line-height: 1.1;
+  font-weight: 740;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.6rem;
+}
+.doc .updated {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+.doc h2 {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 700;
+  margin: 2.2rem 0 0.6rem;
+}
+.doc .summary {
+  font-size: 1.15rem;
+  line-height: 1.55;
+}
+.doc h1 + .summary { margin-top: 1.1rem; }
+
+.scopes {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.4rem 0 1.2rem;
+  font-size: 0.95rem;
+}
+.scopes th,
+.scopes td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.55rem 0.8rem 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.scopes th { font-weight: 700; }
+.scopes code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 34rem) {
+  :root {
+    --gutter: 1.9rem;
+    --wire-x: 0.45rem;
+  }
+  .node h2 { font-size: 1.32rem; }
+  .node { --branch-y: 0.86rem; }
+  .scopes th:nth-child(1),
+  .scopes td:nth-child(1) { width: 40%; }
+}
+
+@media print {
+  body { padding: 0; background: #fff; }
+  .contact a::after { content: " (" attr(href) ")"; font-weight: 400; }
+}
